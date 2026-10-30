@@ -15,9 +15,11 @@ export const SiteFooter: React.FC = () => {
           {/* Col 1: Institute Brand & Identity */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-[#873A2B] text-white flex items-center justify-center font-serif font-bold text-lg shadow-xs">
-                M
-              </div>
+              <img
+                src="/images/mait-logo.png"
+                alt="Maharaja Agrasen Institute of Technology logo"
+                className="w-8 h-9 object-contain shrink-0"
+              />
               <div>
                 <h4 className="text-sm font-serif font-bold text-[#203044] tracking-wider">
                   MAHARAJA AGRASEN INSTITUTE OF TECHNOLOGY

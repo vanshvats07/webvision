@@ -11,6 +11,7 @@ import React, { useState, useEffect } from 'react';
 import { TopNav, NavPage } from './components/TopNav';
 import { OperationalRibbon } from './components/OperationalRibbon';
 import { HeroSection } from './components/HeroSection';
+import { HomepagePhotoCarousel } from './components/HomepagePhotoCarousel';
 import { Campus3DSection } from './components/Campus3DSection';
 import { CampusAerialStorytelling } from './components/CampusAerialStorytelling';
 import { AcademicProgramsSection } from './components/AcademicProgramsSection';
@@ -192,6 +193,9 @@ function MainAppContent() {
               onOpenAdmissions={() => setIsAdmissionsOpen(true)}
               onViewPrograms={scrollToAcademics}
             />
+
+            {/* Campus photos supplied by the institute */}
+            <HomepagePhotoCarousel />
 
             {/* 4. Interactive 3D Architectural Campus Model in Daylight */}
             <Campus3DSection />

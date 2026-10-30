@@ -100,9 +100,11 @@ export const TopNav: React.FC<TopNavProps> = ({
           onClick={() => handleNavClick('home')}
           className="flex items-center gap-3 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#873A2B] text-left cursor-pointer"
         >
-          <div className="w-9 h-9 bg-[#873A2B] text-white flex items-center justify-center font-serif font-bold text-lg shadow-xs group-hover:bg-[#16745B] transition-colors">
-            M
-          </div>
+          <img
+            src="/images/mait-logo.png"
+            alt="Maharaja Agrasen Institute of Technology logo"
+            className="w-9 h-10 object-contain shrink-0"
+          />
           <div className="flex flex-col">
             <span className="text-base font-serif font-bold tracking-wider text-[#203044] uppercase whitespace-nowrap">
               MAIT
