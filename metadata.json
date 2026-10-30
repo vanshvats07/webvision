@@ -1,0 +1,6 @@
+{
+  "name": "MAIT — Beyond Boundaries",
+  "description": "Maharaja Agrasen Institute of Technology digital experience. Featuring an interactive 3D architectural campus explorer, official notices, academic programs, research hubs, and placement portal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

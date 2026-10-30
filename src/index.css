@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-serif: 'Lora', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'Space Mono', monospace;
+
+    /* MAIT Official Design System Tokens */
+    --color-bg-main: #F7F5EF;       /* Warm Ivory */
+    --color-bg-card: #FFFFFF;       /* Pure White */
+    --color-accent-brick: #873A2B;  /* Brick Red */
+    --color-accent-green: #16745B;  /* Campus Green */
+    --color-accent-gold: #B18B50;   /* Muted Gold */
+    --color-text-primary: #203044;  /* Deep Navy */
+    --color-text-secondary: #657080;/* Slate Gray */
+    --color-border-subtle: #E7E3D8; /* Subtle Warm Border */
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #F7F5EF;
+    color: #203044;
+    font-size: 15px;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+  }
+
+  h1, h2, h3, h4, .font-serif {
+    font-family: var(--font-serif);
+    color: #203044;
+    letter-spacing: -0.015em;
+  }
+
+  .font-tabular {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Subtle, refined scrollbar in light mode */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F7F5EF;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D8D2C4;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #873A2B;
+}

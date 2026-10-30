@@ -1,5 +1,34 @@
 # MAIT Connect 2.0
 
+<<<<<<< HEAD
+MAIT Connect is a light-theme campus information and student-services prototype built with React, TypeScript, Vite, Express, and a file-backed JSON data store. The existing cinematic homepage, original campus photographs, and 3D campus experience remain intact.
+
+## Current Features
+
+- Institutional pages for academics, departments, admissions, notices, events, placements, and campus life.
+- Express APIs for authentication, notices, events, complaints, lost and found, notes, opportunities, queue reports, academic planning, campus rooms, and administrative content.
+- Student Hub workflows for event registrations, bookmarks, complaints, and Lost & Found reporting, search, matching, proof-backed claims, status tracking, and reporter/admin claim decisions.
+- MAIT AI Assistant using approved AI-document summaries as retrieval context, server-side Gemini generation, source links, and abstention when no relevant source is found.
+- Searchable keyboard-operated campus and notice command palette.
+
+This is a student-built prototype, not an official MAIT service. It is not connected to MAIT ERP, attendance, grades, sensors, or official grievance systems.
+
+## Requirements and Setup
+
+Use Node.js 20.19 or newer. The repository currently has a Vite 8 / esbuild peer-version mismatch; until its lockfile is regenerated with the chosen package manager, install with:
+
+```sh
+npm install --legacy-peer-deps
+cp .env.example .env.local
+```
+
+Edit `.env.local` and set `GEMINI_API_KEY` to enable generated answers. `AUTH_TOKEN_SECRET` should be set locally for stable signed sessions. Keep both values private; neither belongs in frontend code.
+
+Run the app and checks:
+
+```sh
+npm run dev
+=======
 > **A smarter digital campus experience for Maharaja Agrasen Institute of Technology.**
 >
 > An immersive, light-themed college website concept that brings institutional information and useful student services into one place.
@@ -255,10 +284,48 @@ Then open the local URL printed in the terminal (commonly `http://localhost:3000
 Use the scripts available in `package.json`. Common checks include:
 
 ```bash
+>>>>>>> b703f5d901cddd0892d405c21e4bb3dd27eb8401
 npm run lint
 npm run build
 ```
 
+<<<<<<< HEAD
+The Express server and Vite development middleware use port `3000` by default. Override it with `PORT`.
+
+## AI and Retrieval
+
+`POST /api/ai/chat` normalizes a question into tokens, searches chunks made from approved `AiDocumentRecord` titles and summaries, and sends only the top lexical matches to Gemini. Answers are instructed to stay within the retrieved evidence; source links and verification dates come from the stored records, not model output. Unmatched questions abstain without calling Gemini. Requests are limited per client IP.
+
+The current corpus contains short summaries, not the underlying official PDFs or full documents. Retrieval is lexical and summary-based; there are no embeddings, pgvector, PostgreSQL full-text search, notice explainer, or authenticated student-record tools. Add and verify source documents before relying on answers. Gemini credentials are required for matched questions; without them the endpoint returns `503`.
+
+## Data and Authentication
+
+The server stores data in `.data/mait_database.json`. This file-backed store is suitable for local demonstration only: it is not transactional, does not support multi-instance deployments, and has no migration or managed backup system. Do not use real student personal data in this prototype.
+
+Bearer tokens are HMAC-signed and expire after 12 hours. Production startup requires `AUTH_TOKEN_SECRET`; development generates a temporary process-only secret when omitted, so sessions expire on restart. Passwords use salted scrypt. Existing legacy hashes are verified and upgraded on a successful login. Self-service password recovery is disabled until a verified recovery provider exists.
+
+## Deployment Preparation
+
+Deployment has not been performed or verified. The current server expects a persistent writable filesystem for `.data`, so use a Node host or container with a persistent volume. A stateless/serverless deployment such as default Vercel Functions is not compatible with this storage model without replacing the database and adapting the server entry point.
+
+For a persistent Node deployment:
+
+1. Install dependencies using the setup command above and build with `npm run build`.
+2. Set `NODE_ENV=production`, `PORT`, `AUTH_TOKEN_SECRET`, and `GEMINI_API_KEY` in the hosting provider's secret/environment settings.
+3. Mount persistent storage for `.data`, restrict filesystem access, and establish backups before accepting data.
+4. Start with `npm run start` and verify `/api/health`, authentication, and the AI endpoint in the deployed environment.
+
+The prototype has no database migration scripts or storage-provider setup. Do not expose it to production student records until those controls, account recovery, upload storage, operational monitoring, and an authorization review are in place.
+
+## Known Limitations
+
+- Lost & Found accepts an optional HTTPS image URL; direct image uploads and managed storage are not configured.
+- Gemini, Hindi/Hinglish generation, and citation quality have not been verified without an API credential.
+- The AI corpus is limited to the approved summaries currently seeded in the local database.
+- Student Hub does not yet expose every server-backed utility as a complete student-facing workflow.
+- No automated test suite, deployment, PostgreSQL/Supabase configuration, sitemap, or external upload integration is present.
+- The production bundle currently exceeds Vite's 500 kB chunk warning threshold.
+=======
 Not every scaffold includes both scripts. Check `package.json` before running them and add appropriate checks as the project matures.
 
 ## Official Data and Source Integrity
@@ -333,3 +400,4 @@ This repository is an independent redesign/prototype concept. MAIT names, marks,
 ---
 
 **MAIT Connect 2.0 — One Campus. One Connected Experience.**
+>>>>>>> b703f5d901cddd0892d405c21e4bb3dd27eb8401
