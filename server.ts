@@ -871,6 +871,17 @@ app.get('/api/admin/users', requireAdmin, (req, res) => {
   res.json({ users: db.getAllUsers() });
 });
 
+app.use((error: Error & { status?: number }, req: Request, res: Response, next: NextFunction) => {
+  if (!req.path.startsWith('/api') || (error.status !== 400 && error.status !== 413)) {
+    return next(error);
+  }
+
+  const message = error.status === 413
+    ? 'Request body exceeds the 64 KB limit.'
+    : 'Request body must contain valid JSON.';
+  res.status(error.status).json({ error: message });
+});
+
 // ==========================================
 // VITE INTEGRATION / STATIC ASSETS
 // ==========================================
