@@ -294,15 +294,16 @@ app.get('/api/auth/me', requireAuth, (req: AuthenticatedRequest, res) => {
 
 app.put('/api/auth/profile', requireAuth, (req: AuthenticatedRequest, res) => {
   const { name, phone, bio, department, semester, githubUrl, linkedinUrl } = req.body;
-  const updated = db.updateUser(req.user!.id, {
-    name: name || req.user!.name,
-    phone,
-    bio,
-    department: department || req.user!.department,
-    semester: semester ? Number(semester) : req.user!.semester,
-    githubUrl,
-    linkedinUrl,
-  });
+  const updates: Partial<User> = {};
+  if (typeof name === 'string' && name.trim()) updates.name = name.trim();
+  if (phone !== undefined) updates.phone = phone;
+  if (bio !== undefined) updates.bio = bio;
+  if (typeof department === 'string' && department.trim()) updates.department = department.trim();
+  if (semester !== undefined) updates.semester = Number(semester);
+  if (githubUrl !== undefined) updates.githubUrl = githubUrl;
+  if (linkedinUrl !== undefined) updates.linkedinUrl = linkedinUrl;
+
+  const updated = db.updateUser(req.user!.id, updates);
   if (!updated) return res.status(404).json({ error: 'User not found' });
   const { passwordHash, ...safeUser } = updated;
   res.json({ user: safeUser, message: 'Profile updated successfully' });
