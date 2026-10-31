@@ -217,6 +217,9 @@ app.post('/api/auth/demo-login', (req, res) => {
   if (!user) {
     return res.status(404).json({ error: `Demo account for ${role} not found.` });
   }
+  if (user.status !== 'Active') {
+    return res.status(403).json({ error: `Demo account is ${user.status}.` });
+  }
 
   const token = generateToken(user.id);
   db.updateUser(user.id, { lastLoginAt: new Date().toISOString() });
