@@ -141,16 +141,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       localStorage.setItem('mait_auth_token', data.token);
       localStorage.setItem('mait_auth_user', JSON.stringify(data.user));
       return { success: true };
-    } catch (err: any) {
-      // Local demo fallback if backend unavailable
-      if (email.includes('admin')) {
-        const u = FALLBACK_DEMO_USERS.admin;
-        setUser(u);
-        setToken('fallback-token-admin');
-        localStorage.setItem('mait_auth_user', JSON.stringify(u));
-        return { success: true };
-      }
-      return { success: false, error: err.message || 'Network connection failed' };
+    } catch (err: unknown) {
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : 'Network connection failed',
+      };
     }
   };
 
