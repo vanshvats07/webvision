@@ -24,6 +24,11 @@ describe('password utilities', () => {
 
     assert.equal(verifyPassword('test-password', legacyHash), true);
   });
+
+  it('rejects malformed stored hashes without authenticating', () => {
+    assert.equal(verifyPassword('test-password', 'scrypt$missing'), false);
+    assert.equal(verifyPassword('test-password', 'not-a-hash'), false);
+  });
 });
 
 describe('authentication tokens', () => {
