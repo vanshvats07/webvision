@@ -60,4 +60,13 @@ describe('authentication tokens', () => {
 
     assert.equal(parseToken(token), null);
   });
+
+  it('rejects tokens issued in the future', (testContext) => {
+    const now = Date.now();
+    testContext.mock.method(Date, 'now', () => now + 60_000);
+    const token = generateToken('usr-test');
+    testContext.mock.restoreAll();
+
+    assert.equal(parseToken(token), null);
+  });
 });
