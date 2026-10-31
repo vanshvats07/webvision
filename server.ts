@@ -31,7 +31,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = process.env.PORT === undefined ? 3000 : Number(process.env.PORT);
+if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65_535) {
+  throw new Error('PORT must be an integer between 1 and 65535.');
+}
 const assistantRateLimits = new Map<string, { count: number; resetAt: number }>();
 const assistantRateLimitCleanup = setInterval(() => {
   const now = Date.now();
