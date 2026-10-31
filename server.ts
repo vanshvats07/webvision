@@ -174,11 +174,11 @@ app.post('/api/auth/login', (req, res) => {
 
   const user = db.getUserByEmail(email);
   if (!user) {
-    return res.status(401).json({ error: 'Invalid credentials. User not found.' });
+    return res.status(401).json({ error: 'Invalid email or password.' });
   }
 
   if (!verifyPassword(password, user.passwordHash)) {
-    return res.status(401).json({ error: 'Invalid password. Please check your credentials.' });
+    return res.status(401).json({ error: 'Invalid email or password.' });
   }
 
   if (!user.passwordHash.startsWith('scrypt$')) {
