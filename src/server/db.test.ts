@@ -47,4 +47,12 @@ describe('authentication tokens', () => {
     assert.equal(parseToken('payload'), null);
     assert.equal(parseToken(`${token}.unexpected`), null);
   });
+
+  it('rejects tokens after their 12-hour lifetime', (testContext) => {
+    const token = generateToken('usr-test');
+    const now = Date.now();
+    testContext.mock.method(Date, 'now', () => now + 13 * 60 * 60 * 1000);
+
+    assert.equal(parseToken(token), null);
+  });
 });
