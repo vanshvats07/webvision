@@ -203,10 +203,15 @@ app.post('/api/auth/login', (req, res) => {
 });
 
 app.post('/api/auth/demo-login', (req, res) => {
-  const { role } = req.body;
-  let targetEmail = 'demo-student@mait.ac.in';
-  if (role === 'admin') targetEmail = 'demo-admin@mait.ac.in';
-  if (role === 'editor') targetEmail = 'demo-editor@mait.ac.in';
+  const role = req.body?.role;
+  if (role !== 'admin' && role !== 'editor' && role !== 'student') {
+    return res.status(400).json({ error: 'A valid demo role is required.' });
+  }
+  const targetEmail = role === 'admin'
+    ? 'demo-admin@mait.ac.in'
+    : role === 'editor'
+      ? 'demo-editor@mait.ac.in'
+      : 'demo-student@mait.ac.in';
 
   const user = db.getUserByEmail(targetEmail);
   if (!user) {
