@@ -230,25 +230,54 @@ app.post('/api/auth/demo-login', (req, res) => {
 });
 
 app.post('/api/auth/register', (req, res) => {
-  const { name, email, password, department, enrollmentNumber, semester, phone } = req.body;
-  if (!name || !email || !password) {
+  const body = req.body;
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return res.status(400).json({ error: 'A valid registration object is required.' });
+  }
+
+  const { name, email, password, department, enrollmentNumber, semester, phone } = body;
+  if (typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
     return res.status(400).json({ error: 'Name, email, and password are required.' });
   }
 
-  const existing = db.getUserByEmail(email);
+  const normalizedName = name.trim();
+  const normalizedEmail = email.trim().toLowerCase();
+  if (normalizedName.length < 2 || normalizedName.length > 100) {
+    return res.status(400).json({ error: 'Name must be between 2 and 100 characters.' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail) || normalizedEmail.length > 254) {
+    return res.status(400).json({ error: 'Enter a valid email address.' });
+  }
+  if (password.length < 8 || password.length > 128) {
+    return res.status(400).json({ error: 'Password must be between 8 and 128 characters.' });
+  }
+  if (department !== undefined && (typeof department !== 'string' || department.length > 100)) {
+    return res.status(400).json({ error: 'Department must be 100 characters or fewer.' });
+  }
+  if (enrollmentNumber !== undefined && (typeof enrollmentNumber !== 'string' || enrollmentNumber.length > 40)) {
+    return res.status(400).json({ error: 'Enrollment number must be 40 characters or fewer.' });
+  }
+  if (semester !== undefined && (!Number.isInteger(semester) || semester < 1 || semester > 8)) {
+    return res.status(400).json({ error: 'Semester must be an integer between 1 and 8.' });
+  }
+  if (phone !== undefined && (typeof phone !== 'string' || phone.length > 32)) {
+    return res.status(400).json({ error: 'Phone must be 32 characters or fewer.' });
+  }
+
+  const existing = db.getUserByEmail(normalizedEmail);
   if (existing) {
     return res.status(409).json({ error: 'An account with this email already exists.' });
   }
 
   const newUser = db.createUser({
-    name,
-    email,
+    name: normalizedName,
+    email: normalizedEmail,
     passwordHash: hashPassword(password),
     role: 'Student', // Always default newly registered accounts to Student
-    department: department || 'General Engineering',
-    enrollmentNumber: enrollmentNumber || '',
-    semester: Number(semester) || 1,
-    phone: phone || '',
+    department: typeof department === 'string' && department.trim() ? department.trim() : 'General Engineering',
+    enrollmentNumber: typeof enrollmentNumber === 'string' ? enrollmentNumber.trim() : '',
+    semester: semester ?? 1,
+    phone: typeof phone === 'string' ? phone.trim() : '',
   });
 
   const token = generateToken(newUser.id);
