@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { describe, it } from 'node:test';
 import { generateToken, hashPassword, parseToken, verifyPassword } from './db.js';
 
@@ -14,6 +15,14 @@ describe('password utilities', () => {
 
   it('rejects an incorrect password', () => {
     assert.equal(verifyPassword('wrong-password', hashPassword('test-password')), false);
+  });
+
+  it('continues to verify legacy password hashes for migration', () => {
+    const legacyHash = createHash('sha256')
+      .update('mait_salt_2026_test-password')
+      .digest('hex');
+
+    assert.equal(verifyPassword('test-password', legacyHash), true);
   });
 });
 
