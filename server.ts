@@ -82,7 +82,7 @@ function retrieveAiContext(query: string) {
     .slice(0, 4);
 }
 
-app.use(express.json());
+app.use(express.json({ limit: '64kb' }));
 
 // Request logger for API calls
 app.use((req, res, next) => {
