@@ -293,13 +293,48 @@ app.get('/api/auth/me', requireAuth, (req: AuthenticatedRequest, res) => {
 });
 
 app.put('/api/auth/profile', requireAuth, (req: AuthenticatedRequest, res) => {
-  const { name, phone, bio, department, semester, githubUrl, linkedinUrl } = req.body;
+  const body = req.body;
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return res.status(400).json({ error: 'A valid profile object is required.' });
+  }
+  const { name, phone, bio, department, semester, githubUrl, linkedinUrl } = body;
+  if (name !== undefined && (typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 100)) {
+    return res.status(400).json({ error: 'Name must be between 2 and 100 characters.' });
+  }
+  const boundedFields = [
+    ['phone', phone, 32],
+    ['bio', bio, 500],
+    ['department', department, 100],
+  ] as const;
+  for (const [field, value, maxLength] of boundedFields) {
+    if (value !== undefined && (typeof value !== 'string' || value.length > maxLength)) {
+      return res.status(400).json({ error: `${field} must be ${maxLength} characters or fewer.` });
+    }
+  }
+  if (semester !== undefined && (!Number.isInteger(semester) || semester < 1 || semester > 8)) {
+    return res.status(400).json({ error: 'Semester must be an integer between 1 and 8.' });
+  }
+  for (const [field, value] of [['GitHub URL', githubUrl], ['LinkedIn URL', linkedinUrl]] as const) {
+    if (value !== undefined && value !== '') {
+      if (typeof value !== 'string') {
+        return res.status(400).json({ error: `${field} must be a valid HTTP(S) URL.` });
+      }
+      try {
+        if (!['http:', 'https:'].includes(new URL(value).protocol)) {
+          return res.status(400).json({ error: `${field} must be a valid HTTP(S) URL.` });
+        }
+      } catch {
+        return res.status(400).json({ error: `${field} must be a valid HTTP(S) URL.` });
+      }
+    }
+  }
+
   const updates: Partial<User> = {};
   if (typeof name === 'string' && name.trim()) updates.name = name.trim();
   if (phone !== undefined) updates.phone = phone;
   if (bio !== undefined) updates.bio = bio;
   if (typeof department === 'string' && department.trim()) updates.department = department.trim();
-  if (semester !== undefined) updates.semester = Number(semester);
+  if (semester !== undefined) updates.semester = semester;
   if (githubUrl !== undefined) updates.githubUrl = githubUrl;
   if (linkedinUrl !== undefined) updates.linkedinUrl = linkedinUrl;
 
