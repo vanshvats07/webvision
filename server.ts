@@ -33,6 +33,13 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const assistantRateLimits = new Map<string, { count: number; resetAt: number }>();
+const assistantRateLimitCleanup = setInterval(() => {
+  const now = Date.now();
+  for (const [clientKey, limit] of assistantRateLimits) {
+    if (limit.resetAt <= now) assistantRateLimits.delete(clientKey);
+  }
+}, 60_000);
+assistantRateLimitCleanup.unref();
 
 function limitAssistantRequests(req: Request, res: Response, next: NextFunction) {
   const now = Date.now();
