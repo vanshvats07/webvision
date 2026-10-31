@@ -108,12 +108,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             const data = await res.json();
             setUser(data.user);
             localStorage.setItem('mait_auth_user', JSON.stringify(data.user));
-          } else {
-            // If token invalid, clean up unless offline demo user
-            if (!storedUser) {
-              setToken(null);
-              localStorage.removeItem('mait_auth_token');
-            }
+          } else if (res.status === 401 || res.status === 403) {
+            setUser(null);
+            setToken(null);
+            localStorage.removeItem('mait_auth_token');
+            localStorage.removeItem('mait_auth_user');
           }
         } catch {
           // Network fallback keeps stored user
