@@ -39,4 +39,12 @@ describe('authentication tokens', () => {
 
     assert.equal(parseToken(`${payload}.${replacement}${signature.slice(1)}`), null);
   });
+
+  it('rejects malformed tokens with missing or extra segments', () => {
+    const token = generateToken('usr-test');
+
+    assert.equal(parseToken(''), null);
+    assert.equal(parseToken('payload'), null);
+    assert.equal(parseToken(`${token}.unexpected`), null);
+  });
 });
